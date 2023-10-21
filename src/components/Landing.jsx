@@ -3,30 +3,37 @@ import Editor from "@monaco-editor/react";
 import "../App.css";
 
 const CodeEditorWindow = ({ onChange, language, code, theme }) => {
+  // State to hold the code value and lock/unlock status
   const [value, setValue] = useState(code || "");
   const [isLocked, setIsLocked] = useState(false);
 
-  const handleEditorChange = (value) => {
+  // Handle code changes in the editor
+  const handleEditorChange = (newValue) => {
+    // Update the value only if the editor is not locked
     if (!isLocked) {
-      setValue(value);
-      onChange("code", value);
+      setValue(newValue);
+      onChange("code", newValue); // Notify the parent component about the code change
     }
   };
 
+  // Handle the "Copy" button click
   const handleCopyClick = () => {
     if (!isLocked) {
+      // Copy the code to the clipboard
       navigator.clipboard.writeText(value);
       alert("Code copied to clipboard!");
     }
   };
 
+  // Handle the "Save" button click
   const handleSaveClick = () => {
-    // You can implement save functionality here.
-    // This can involve sending the code to a server or saving it locally.
+    //Save functionality to save code locally
     alert("Code saved!");
   };
 
+  // Handle the "Lock/Unlock" button click
   const handleLockClick = () => {
+    // Toggle the locked state
     setIsLocked(!isLocked);
   };
 
@@ -49,15 +56,15 @@ const CodeEditorWindow = ({ onChange, language, code, theme }) => {
         </button>
       </div>
       <Editor
-        height="85vh"
-        width="100%"
-        language={language || "javascript"}
-        value={value}
-        theme={theme}
-        defaultValue="// some comment"
-        onChange={handleEditorChange}
+        height="85vh" // Set the editor's height
+        width="100%" // Set the editor's width
+        language={language || "javascript"} // Set the code language
+        value={value} // Set the code content
+        theme={theme} // Set the editor theme
+        defaultValue="// some comment" // Default code when empty
+        onChange={handleEditorChange} // Handle code changes
         options={{
-          readOnly: isLocked,
+          readOnly: isLocked, // Set the editor to read-only mode if it's locked
         }}
       />
     </div>
